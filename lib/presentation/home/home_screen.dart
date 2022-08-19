@@ -32,6 +32,21 @@ class _HomeScreenState extends State<HomeScreen> {
     final state = viewModel.state;
 
     return Scaffold(
+      appBar: AppBar(
+        title: SizedBox(
+          width: 1200,
+          child: Row(
+            children: [
+              Image.asset(
+                'img/logo_InstaBooks_wh.png',
+                color: Colors.black,
+                height: 20,
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_google_sheet_test/domain/model/book_data/book_data.dart';
+import 'package:flutter_google_sheet_test/presentation/home/components/overlay/buy_overlay_loader.dart';
 import 'package:flutter_google_sheet_test/util/util.dart';
 
 class BookDataWidget extends StatelessWidget {
   final BookData data;
-  final imagePre = 'https://bookthumb-phinf.pstatic.net/cover/';
 
   const BookDataWidget({
     Key? key,
@@ -117,7 +117,13 @@ class BookDataWidget extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        BuyOverlayLoader.appLoader.showLoader(data);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all<Color>(Colors.brown),
+                      ),
                       child: const Text(
                         '구매하기',
                       ),
@@ -131,7 +137,7 @@ class BookDataWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 20.0),
           child: Text(
-            data.post_body.replaceAll('[]', ''),
+            data.post_body.replaceAll('[]', '\n'),
             style: const TextStyle(
               fontSize: 17,
               height: 1.6,

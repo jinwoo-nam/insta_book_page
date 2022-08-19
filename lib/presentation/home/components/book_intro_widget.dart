@@ -24,7 +24,7 @@ class BookIntroWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 15.0),
           child: Text(
-            bookIntro != null ? bookIntro!.desc.replaceAll('[]', '') : '',
+            bookIntro != null ? bookIntro!.desc.replaceAll('[]', '\n') : '',
             style: const TextStyle(
               fontSize: 16,
               height: 1.9,

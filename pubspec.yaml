@@ -43,6 +43,7 @@ dependencies:
       url: https://github.com/jinwoo-nam/searchable_dropdown.git
       ref: master
   intl: ^0.17.0
+  barcode_widget: ^2.0.3
 
 dev_dependencies:
   flutter_test:
