@@ -116,16 +116,19 @@ class BookDataWidget extends StatelessWidget {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 12.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        BuyOverlayLoader.appLoader.showLoader(data);
-                      },
-                      style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.brown),
-                      ),
-                      child: const Text(
-                        '구매하기',
+                    child: SizedBox(
+                      height: 30,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          BuyOverlayLoader.appLoader.showLoader(data);
+                        },
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.brown),
+                        ),
+                        child: const Text(
+                          '구매하기',
+                        ),
                       ),
                     ),
                   ),

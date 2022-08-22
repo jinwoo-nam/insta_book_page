@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_google_sheet_test/presentation/footer/footer_widget.dart';
 import 'package:flutter_google_sheet_test/presentation/home/components/book_data_widget.dart';
 import 'package:flutter_google_sheet_test/presentation/home/components/book_intro_widget.dart';
 import 'package:flutter_google_sheet_test/presentation/home/home_view_model.dart';
@@ -15,11 +16,18 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController controller = ScrollController();
   int curIndex = 11;
 
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -32,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final state = viewModel.state;
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: SizedBox(
           width: 1200,
@@ -48,6 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
+        controller: controller,
         child: Column(
           children: [
             Stack(
@@ -83,15 +93,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 Positioned.fill(
-                  top: 400,
+                  top: 350,
                   child: Center(
-                    child: Text(
-                      state.curBookInfo != null ? state.curBookInfo!.main : '',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 40,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        state.curBookInfo != null
+                            ? state.curBookInfo!.main
+                            : '',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                        ),
                       ),
                     ),
                   ),
@@ -115,18 +130,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Align(
                         alignment: Alignment.topRight,
-                        child: SizedBox(
-                          width: 70,
-                          child: DropdownSearch(
-                            items: const [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
-                            selectedItem: curIndex,
-                            menuHeight: 200,
-                            onChanged: (val) {
-                              int index = int.parse(val.toString());
-                              viewModel.pageChange(index);
-                              curIndex = index;
-                            },
-                            dropdownSearchTextAlign: TextAlign.center,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 14.0),
+                          child: SizedBox(
+                            width: 100,
+                            child: DropdownSearch(
+                              items: const [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+                              selectedItem: curIndex,
+                              menuHeight: 200,
+                              onChanged: (val) {
+                                int index = int.parse(val.toString());
+                                viewModel.pageChange(index);
+                                curIndex = index;
+                              },
+                              dropdownSearchTextAlign: TextAlign.center,
+                              dropdownSearchDecoration: const InputDecoration(
+                                enabledBorder: InputBorder.none,
+                                focusedBorder: InputBorder.none,
+                                focusColor: Colors.transparent,
+                                fillColor: Colors.transparent,
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -142,7 +166,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                 ),
-              )
+              ),
+            if (!state.isLoading) const FooterWidget(),
           ],
         ),
       ),
