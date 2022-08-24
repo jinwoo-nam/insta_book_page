@@ -13,6 +13,7 @@ class HomeState with _$HomeState {
     BookIntro? curBookInfo,
     @Default([]) List<BookData> curBookData,
     @Default('') String imageUrl,
+    @Default([]) List<Map<String,List<BookData>>> totalBookData,
   }) = _HomeState;
   factory HomeState.fromJson(Map<String, dynamic> json) => _$HomeStateFromJson(json);
 }

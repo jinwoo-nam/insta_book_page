@@ -25,6 +25,8 @@ mixin _$HomeState {
   BookIntro? get curBookInfo => throw _privateConstructorUsedError;
   List<BookData> get curBookData => throw _privateConstructorUsedError;
   String get imageUrl => throw _privateConstructorUsedError;
+  List<Map<String, List<BookData>>> get totalBookData =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,7 +43,8 @@ abstract class $HomeStateCopyWith<$Res> {
       List<BookIntro> bookIntroList,
       BookIntro? curBookInfo,
       List<BookData> curBookData,
-      String imageUrl});
+      String imageUrl,
+      List<Map<String, List<BookData>>> totalBookData});
 
   $BookIntroCopyWith<$Res>? get curBookInfo;
 }
@@ -61,6 +64,7 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
     Object? curBookInfo = freezed,
     Object? curBookData = freezed,
     Object? imageUrl = freezed,
+    Object? totalBookData = freezed,
   }) {
     return _then(_value.copyWith(
       isLoading: isLoading == freezed
@@ -83,6 +87,10 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      totalBookData: totalBookData == freezed
+          ? _value.totalBookData
+          : totalBookData // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, List<BookData>>>,
     ));
   }
 
@@ -109,7 +117,8 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
       List<BookIntro> bookIntroList,
       BookIntro? curBookInfo,
       List<BookData> curBookData,
-      String imageUrl});
+      String imageUrl,
+      List<Map<String, List<BookData>>> totalBookData});
 
   @override
   $BookIntroCopyWith<$Res>? get curBookInfo;
@@ -132,6 +141,7 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
     Object? curBookInfo = freezed,
     Object? curBookData = freezed,
     Object? imageUrl = freezed,
+    Object? totalBookData = freezed,
   }) {
     return _then(_$_HomeState(
       isLoading: isLoading == freezed
@@ -154,6 +164,10 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
           ? _value.imageUrl
           : imageUrl // ignore: cast_nullable_to_non_nullable
               as String,
+      totalBookData: totalBookData == freezed
+          ? _value._totalBookData
+          : totalBookData // ignore: cast_nullable_to_non_nullable
+              as List<Map<String, List<BookData>>>,
     ));
   }
 }
@@ -166,9 +180,11 @@ class _$_HomeState implements _HomeState {
       final List<BookIntro> bookIntroList = const [],
       this.curBookInfo,
       final List<BookData> curBookData = const [],
-      this.imageUrl = ''})
+      this.imageUrl = '',
+      final List<Map<String, List<BookData>>> totalBookData = const []})
       : _bookIntroList = bookIntroList,
-        _curBookData = curBookData;
+        _curBookData = curBookData,
+        _totalBookData = totalBookData;
 
   factory _$_HomeState.fromJson(Map<String, dynamic> json) =>
       _$$_HomeStateFromJson(json);
@@ -197,10 +213,17 @@ class _$_HomeState implements _HomeState {
   @override
   @JsonKey()
   final String imageUrl;
+  final List<Map<String, List<BookData>>> _totalBookData;
+  @override
+  @JsonKey()
+  List<Map<String, List<BookData>>> get totalBookData {
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_totalBookData);
+  }
 
   @override
   String toString() {
-    return 'HomeState(isLoading: $isLoading, bookIntroList: $bookIntroList, curBookInfo: $curBookInfo, curBookData: $curBookData, imageUrl: $imageUrl)';
+    return 'HomeState(isLoading: $isLoading, bookIntroList: $bookIntroList, curBookInfo: $curBookInfo, curBookData: $curBookData, imageUrl: $imageUrl, totalBookData: $totalBookData)';
   }
 
   @override
@@ -215,7 +238,9 @@ class _$_HomeState implements _HomeState {
                 .equals(other.curBookInfo, curBookInfo) &&
             const DeepCollectionEquality()
                 .equals(other._curBookData, _curBookData) &&
-            const DeepCollectionEquality().equals(other.imageUrl, imageUrl));
+            const DeepCollectionEquality().equals(other.imageUrl, imageUrl) &&
+            const DeepCollectionEquality()
+                .equals(other._totalBookData, _totalBookData));
   }
 
   @JsonKey(ignore: true)
@@ -226,7 +251,8 @@ class _$_HomeState implements _HomeState {
       const DeepCollectionEquality().hash(_bookIntroList),
       const DeepCollectionEquality().hash(curBookInfo),
       const DeepCollectionEquality().hash(_curBookData),
-      const DeepCollectionEquality().hash(imageUrl));
+      const DeepCollectionEquality().hash(imageUrl),
+      const DeepCollectionEquality().hash(_totalBookData));
 
   @JsonKey(ignore: true)
   @override
@@ -247,7 +273,8 @@ abstract class _HomeState implements HomeState {
       final List<BookIntro> bookIntroList,
       final BookIntro? curBookInfo,
       final List<BookData> curBookData,
-      final String imageUrl}) = _$_HomeState;
+      final String imageUrl,
+      final List<Map<String, List<BookData>>> totalBookData}) = _$_HomeState;
 
   factory _HomeState.fromJson(Map<String, dynamic> json) =
       _$_HomeState.fromJson;
@@ -262,6 +289,8 @@ abstract class _HomeState implements HomeState {
   List<BookData> get curBookData;
   @override
   String get imageUrl;
+  @override
+  List<Map<String, List<BookData>>> get totalBookData;
   @override
   @JsonKey(ignore: true)
   _$$_HomeStateCopyWith<_$_HomeState> get copyWith =>

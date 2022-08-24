@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "642460748747",
+    "project_id": "instabooks-page",
+    "storage_bucket": "instabooks-page.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:642460748747:android:0118f6455ae843d431044e",
+        "android_client_info": {
+          "package_name": "com.example.flutter_google_sheet_test"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "642460748747-h8sd5fch71vti1ih4ngiqmbjsdk7satj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjQ1UGW06YpwyVMAqPvo380rq_qYgtAcc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "642460748747-h8sd5fch71vti1ih4ngiqmbjsdk7satj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_sheet_test/presentation/footer/footer_widget.dart';
@@ -21,13 +22,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    init();
     super.initState();
   }
 
   @override
   void dispose() {
     controller.dispose();
+    context.read<HomeViewModel>().disposeData();
     super.dispose();
+  }
+
+  void init() async {
+    // FirebaseFirestore.instance
+    //     .collection('temp3')
+    //     .doc('timestamp')
+    //     .set(<String, dynamic>{
+    //   'timestamp': FieldValue.serverTimestamp(),
+    // });
+
+
+
+    await context.read<HomeViewModel>().loadData();
   }
 
   @override

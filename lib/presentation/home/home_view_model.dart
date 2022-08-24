@@ -1,5 +1,10 @@
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_sheet_test/domain/model/book_data/book_data.dart';
+import 'package:flutter_google_sheet_test/domain/model/book_intro/book_intro.dart';
 import 'package:flutter_google_sheet_test/domain/use_case/sheet_use_case.dart';
 import 'package:flutter_google_sheet_test/presentation/home/home_state.dart';
 
@@ -9,34 +14,119 @@ class HomeViewModel with ChangeNotifier {
   HomeViewModel({
     required this.sheetUseCase,
   }) {
-    initSheet();
+    loadData();
   }
 
   HomeState _state = HomeState();
 
   HomeState get state => _state;
 
-  Future<void> initSheet() async {
-    await sheetUseCase.init();
-    loadIntroData();
+  StreamSubscription<QuerySnapshot>? _bookDataSubscription;
+
+  Future<void> loadData() async {
+//     _bookDataSubscription = FirebaseFirestore.instance
+//         .collection('temp3')
+//         .doc('timestamp')
+// //        .collection('sub')
+// //        .orderBy('timestamp', descending: true)
+//         .snapshots()
+//         .listen((snapshot) {
+//       List<BookData> temp = [];
+//       print(snapshot.docs.length);
+//       for (final document in snapshot.docs) {
+//         temp.add(
+//           BookData(
+//             booktitle: document.data()['issue'] as String,
+//             author: document.data()['mainTitle'] as String,
+//           ),
+//         );
+//       }
+//
+//       print(temp);
+//     });
+
+    final docRef = FirebaseFirestore.instance.collection('bookIntro');
+    final bookIntroRef = await docRef.get();
+
+    final timestampSnapshot = await FirebaseFirestore.instance
+        .collection('timestamp')
+        .doc('timestamp')
+        .get();
+    final time = timestampSnapshot.data();
+    Timestamp? temp = time?['timestamp'];
+    final DateTime? lastSavedDate = temp?.toDate();
+
+    List<BookIntro> bookIntro = [];
+    List<BookData> bookData = [];
+
+    bookIntro =
+        bookIntroRef.docs.map((e) => BookIntro.fromJson(e.data())).toList();
+
+    if (lastSavedDate == null ||
+        DateTime.now().difference(lastSavedDate).inDays > 0) {
+      print('엑셀에서 읽기');
+      await initAndLoadSheet(bookIntro: bookIntro, bookData: bookData);
+    }
   }
 
-  Future<void> loadIntroData() async {
+  void disposeData() {
+    _bookDataSubscription?.cancel();
+  }
+
+  Future<void> initAndLoadSheet({
+    required List<BookIntro> bookIntro,
+    required List<BookData> bookData,
+  }) async {
+    await sheetUseCase.init();
+    await loadIntroDataFromGoogleSheet(
+        bookIntro: bookIntro, bookData: bookData);
+  }
+
+  Future<void> loadIntroDataFromGoogleSheet({
+    required List<BookIntro> bookIntro,
+    required List<BookData> bookData,
+  }) async {
     _state = state.copyWith(
       isLoading: true,
     );
     notifyListeners();
     final res = await sheetUseCase.getIntroAll();
+    List<String> issues = [];
+    res.forEach((element) {
+      issues.add(element.issue);
+    });
 
-    final bookData = await loadPageData(res[0].issue);
+    bookIntro.forEach((element) {
+      //print(element.issue);
+    });
 
-    _state = state.copyWith(
-      bookIntroList: res,
-      isLoading: false,
-      curBookInfo: res[0],
-      curBookData: bookData,
-      imageUrl: 'img/img11.jpeg',
-    );
+    print('res length ${res.length}');
+    await totalBookDataLoad(issues);
+    if (res.length != bookIntro.length) {
+      for (int i = 0; i < res.length; i++) {
+        FirebaseFirestore.instance
+            .collection('bookIntro')
+            .doc('${i + 1}'.padLeft(3, '0'))
+            .set(res[i].toJson());
+      }
+      FirebaseFirestore.instance
+          .collection('timestamp')
+          .doc('timestamp')
+          .set(<String, dynamic>{
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    }
+    //print(res);
+    //
+    // final bookData = await loadPageData(res[0].issue);
+    //
+    // _state = state.copyWith(
+    //   bookIntroList: res,
+    //   isLoading: false,
+    //   curBookInfo: res[0],
+    //   curBookData: bookData,
+    //   imageUrl: 'img/img11.jpeg',
+    // );
 
     notifyListeners();
   }
@@ -64,6 +154,37 @@ class HomeViewModel with ChangeNotifier {
     await sheetUseCase.initPage(page);
     final res = await sheetUseCase.getBookData();
     return res;
+  }
+
+  Future<void> totalBookDataLoad(List<String> issues) async {
+    List<Map<String, List<BookData>>> totalBookData = [];
+    for (final issue in issues) {
+      await sheetUseCase.initPage(issue);
+      final res = await sheetUseCase.getBookData();
+      totalBookData.add({issue: res});
+    }
+    print(totalBookData[0].keys.toList().first);
+
+    for (final bookIssue in totalBookData) {
+      String issue = bookIssue.keys.toList().first;
+      List<BookData> bookDataList = bookIssue[issue] as List<BookData>;
+
+      //print();
+
+      // FirebaseFirestore.instance
+      //     .collection('bookData')
+      //     .doc(issue)
+      //     .set({'data':bookDataList});
+
+      List<Map<String,dynamic>> temp = [];
+      for (final bookData in bookDataList) {
+        temp.add(bookData.toJson());
+      }
+      FirebaseFirestore.instance
+          .collection('bookData')
+          .doc(issue)
+          .set({'data':temp});
+    }
   }
 
   String getMainImage(int index) {

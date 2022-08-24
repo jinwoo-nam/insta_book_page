@@ -20,6 +20,17 @@ _$_HomeState _$$_HomeStateFromJson(Map<String, dynamic> json) => _$_HomeState(
               .toList() ??
           const [],
       imageUrl: json['imageUrl'] as String? ?? '',
+      totalBookData: (json['totalBookData'] as List<dynamic>?)
+              ?.map((e) => (e as Map<String, dynamic>).map(
+                    (k, e) => MapEntry(
+                        k,
+                        (e as List<dynamic>)
+                            .map((e) =>
+                                BookData.fromJson(e as Map<String, dynamic>))
+                            .toList()),
+                  ))
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$$_HomeStateToJson(_$_HomeState instance) =>
@@ -29,4 +40,5 @@ Map<String, dynamic> _$$_HomeStateToJson(_$_HomeState instance) =>
       'curBookInfo': instance.curBookInfo,
       'curBookData': instance.curBookData,
       'imageUrl': instance.imageUrl,
+      'totalBookData': instance.totalBookData,
     };
