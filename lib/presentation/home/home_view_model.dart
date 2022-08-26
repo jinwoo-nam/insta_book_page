@@ -190,6 +190,9 @@ class HomeViewModel with ChangeNotifier {
   }
 
   String getMainImage(int index) {
+    if (index > 11) {
+      index = 11;
+    }
     return 'img/img$index.jpeg';
   }
 }
