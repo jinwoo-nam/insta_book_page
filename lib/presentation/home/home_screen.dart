@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_sheet_test/presentation/footer/footer_widget.dart';
@@ -22,28 +21,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    init();
     super.initState();
   }
 
   @override
   void dispose() {
     controller.dispose();
-    context.read<HomeViewModel>().disposeData();
     super.dispose();
-  }
-
-  void init() async {
-    // FirebaseFirestore.instance
-    //     .collection('temp3')
-    //     .doc('timestamp')
-    //     .set(<String, dynamic>{
-    //   'timestamp': FieldValue.serverTimestamp(),
-    // });
-
-
-
-    await context.read<HomeViewModel>().loadData();
   }
 
   @override
@@ -130,10 +114,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             if (state.isLoading)
-              const Center(
+              Center(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20.0),
-                  child: CircularProgressIndicator(),
+                  padding: const EdgeInsets.symmetric(vertical: 20.0),
+                  child: Column(
+                    children: const [
+                      Text(
+                        '데이터를 불러오고 있습니다. 시간이 오래 걸릴수도 있습니다.\n잠시만 기다려주세요.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 19,
+                          height: 1.7,
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      CircularProgressIndicator(),
+                    ],
+                  ),
                 ),
               ),
             if (!state.isLoading)

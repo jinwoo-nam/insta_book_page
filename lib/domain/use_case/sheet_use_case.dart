@@ -22,4 +22,29 @@ class SheetUseCase {
   Future<List<BookData>> getBookData() async {
     return await repository.getBookData();
   }
+
+  Future<List<BookIntro>> getBookIntroListFromGoogleSheet() async {
+    await init();
+    final res = await getIntroAll();
+
+    return res;
+  }
+
+  Future<List<Map<String, List<BookData>>>> totalBookDataLoadFromGoogleSheet(
+      List<String> issues) async {
+    List<Map<String, List<BookData>>> totalBookData = [];
+
+    print('google sheet에서 issue 페이지의 데이터 읽어오기');
+    for (final issue in issues) {
+      //issue page 초기화
+      await initPage(issue);
+      //issue page에 있는 데이터 가져옴
+      final res = await getBookData();
+      //totalBookData에 데이터 저장
+      totalBookData.add({issue: res});
+    }
+
+    return totalBookData;
+  }
+
 }

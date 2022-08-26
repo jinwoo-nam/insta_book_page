@@ -1,4 +1,6 @@
+import 'package:flutter_google_sheet_test/data/repository/firestore_repository_impl.dart';
 import 'package:flutter_google_sheet_test/data/repository/sheet_repository_impl.dart';
+import 'package:flutter_google_sheet_test/domain/use_case/firestore_use_case.dart';
 import 'package:flutter_google_sheet_test/domain/use_case/sheet_use_case.dart';
 import 'package:flutter_google_sheet_test/presentation/home/home_view_model.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +11,9 @@ List<SingleChildWidget> getProviders() {
     ChangeNotifierProvider<HomeViewModel>(
       create: (context) => HomeViewModel(
         sheetUseCase: SheetUseCase(SheetRepositoryImpl()),
+        firestoreUseCase: FirestoreUseCase(
+          FirestoreRepositoryImpl(),
+        ),
       ),
     ),
   ];
