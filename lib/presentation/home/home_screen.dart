@@ -17,7 +17,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ScrollController controller = ScrollController();
-  int curIndex = 11;
 
   @override
   void initState() {
@@ -38,6 +37,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final viewModel = context.watch<HomeViewModel>();
     final state = viewModel.state;
+    int curIndex = state.bookIntroList.length;
+    final List<int> indexList = [];
+    for (int i = curIndex; i > 0; i--) {
+      indexList.add(i);
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -152,7 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: SizedBox(
                             width: 100,
                             child: DropdownSearch(
-                              items: const [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
+                              items: indexList,
                               selectedItem: curIndex,
                               menuHeight: 200,
                               onChanged: (val) {

@@ -22,7 +22,7 @@ class FirestoreDataSource {
     });
   }
 
-  Future<List<Map<String, List<BookData>>>> getFirestoreBookData() async {
+  Future<List<Map<String, List<BookData>>>> getFirestoreBookDataList() async {
     List<Map<String, List<BookData>>> totalBookData = [];
     final bookDocRef = FirebaseFirestore.instance.collection('bookData');
     final bookDataRef = await bookDocRef.get();
@@ -34,7 +34,16 @@ class FirestoreDataSource {
     return totalBookData;
   }
 
-  Future<void> saveFirestoreBookData(
+  Future<List<BookData>> getFirestoreBookData(String issue) async {
+    final bookDocRef =
+        FirebaseFirestore.instance.collection('bookData').doc(issue);
+    final bookDataRef = await bookDocRef.get();
+    Iterable data = bookDataRef.data()!['data'];
+    List<BookData> bookData = data.map((e) => BookData.fromJson(e)).toList();
+    return bookData;
+  }
+
+  Future<void> saveFirestoreBookDataList(
       String issue, List<Map<String, dynamic>> bookData) async {
     FirebaseFirestore.instance
         .collection('bookData')

@@ -15,13 +15,17 @@ class FirestoreUseCase {
     await repository.saveFirestoreLastSaveDate();
   }
 
-  Future<List<Map<String, List<BookData>>>> getFirestoreBookData() async {
-    return await repository.getFirestoreBookData();
+  // Future<List<Map<String, List<BookData>>>> getFirestoreBookDataList() async {
+  //   return await repository.getFirestoreBookDataList();
+  // }
+
+  Future<List<BookData>> getFirestoreBookData(String issue) async {
+    return await repository.getFirestoreBookData(issue);
   }
 
-  Future<void> saveFirestoreBookData(
+  Future<void> saveFirestoreBookDataList(
       String issue, List<Map<String, dynamic>> bookData) async {
-    await repository.saveFirestoreBookData(issue, bookData);
+    await repository.saveFirestoreBookDataList(issue, bookData);
   }
 
   Future<List<BookIntro>> getFirestoreBookIntro() async {

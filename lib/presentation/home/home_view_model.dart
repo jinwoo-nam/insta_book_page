@@ -30,17 +30,14 @@ class HomeViewModel with ChangeNotifier {
     notifyListeners();
 
     //Firestore data Load
-    print('1. firestore data load');
     DateTime? lastSavedDate = await firestoreUseCase.getFirestoreLastSaveDate();
     List<BookIntro> bookIntroFromFirestore =
         await firestoreUseCase.getFirestoreBookIntro();
-    List<Map<String, List<BookData>>> totalBookData =
-        await firestoreUseCase.getFirestoreBookData();
 
     final List<String> firestoreIssues = [];
-    if (totalBookData.isNotEmpty) {
-      for (final data in totalBookData) {
-        firestoreIssues.add(data.keys.first);
+    if (bookIntroFromFirestore.isNotEmpty) {
+      for (final data in bookIntroFromFirestore) {
+        firestoreIssues.add(data.issue);
       }
     }
 
@@ -50,7 +47,6 @@ class HomeViewModel with ChangeNotifier {
       );
       notifyListeners();
 
-      print('2. google sheet data 읽기');
       List<String> googleSheetIssues = [];
       //google sheet에서 book intro 읽기
       List<BookIntro> bookIntroFromGoogleSheet =
@@ -62,12 +58,10 @@ class HomeViewModel with ChangeNotifier {
       firestoreIssues.sort();
       googleSheetIssues.sort();
 
-      print('3. 구글 sheet와 firestore data 비교');
       //firestore에 저장된 issue와 google sheet의 issue가 다르면
       if (const DeepCollectionEquality()
               .equals(firestoreIssues, googleSheetIssues) ==
           false) {
-        print('4. 구글 sheet와 firestore data 다를 때');
         //google sheet의 bookData 읽어서 firstore에 저장
 
         //1.google sheet의 issue 중 firestore에 저장되어있는 issue는 빼기(중복 제거)
@@ -76,28 +70,24 @@ class HomeViewModel with ChangeNotifier {
         }
         //2.google sheet에서 book data load(firestore에 없는것만)
         if (googleSheetIssues.isNotEmpty) {
+          print('load bookd data from google sheet');
           final List<Map<String, List<BookData>>> addedBookDataList =
               await sheetUseCase
                   .totalBookDataLoadFromGoogleSheet(googleSheetIssues);
 
-          //3.totalBookData와 새로 읽어온 BookData 합침
-          totalBookData = List.from(totalBookData)..addAll(addedBookDataList);
-
-          //4.totalBookData를 firestore에 저장
-          print('5. total book data firstore에 저장');
-          for (final bookIssue in totalBookData) {
-            String issue = bookIssue.keys.toList().first;
-            List<BookData> bookDataList = bookIssue[issue] as List<BookData>;
+          print('save addedBookData');
+          for (final bookData in addedBookDataList) {
+            String issue = bookData.keys.toList().first;
+            List<BookData> bookDataList = bookData[issue] as List<BookData>;
 
             List<Map<String, dynamic>> temp = [];
             for (final bookData in bookDataList) {
               temp.add(bookData.toJson());
             }
-            firestoreUseCase.saveFirestoreBookData(issue, temp);
+            firestoreUseCase.saveFirestoreBookDataList(issue, temp);
           }
 
           //5.google sheet에서 읽은 book intro를 firestore에 저장
-          print('6. google sheet에서 읽은 book intro를 firstore에 저장');
           if (bookIntroFromGoogleSheet.length !=
               bookIntroFromFirestore.length) {
             for (int i = 0; i < bookIntroFromGoogleSheet.length; i++) {
@@ -107,23 +97,17 @@ class HomeViewModel with ChangeNotifier {
           }
         }
 
-        print('google sheet에서 읽어온 data를 cur data에 넣어준다.');
         //google sheet에서 읽어온 data를 cur data에 넣어준다.
-        totalBookData = await firestoreUseCase.getFirestoreBookData();
         bookIntroFromFirestore = await firestoreUseCase.getFirestoreBookIntro();
+        List<BookData> bookDataFromFirebase =
+            await firestoreUseCase
+                .getFirestoreBookData(bookIntroFromFirestore[0].issue);
 
-        List<BookData> bookData = [];
-        for (final data in totalBookData) {
-          if (data.keys.first == bookIntroFromFirestore[0].issue) {
-            bookData = data.values.first;
-            break;
-          }
-        }
+        List<BookData> bookData = bookDataFromFirebase;
 
-        print('state 초기화');
         _state = state.copyWith(
           bookIntroList: bookIntroFromGoogleSheet,
-          totalBookData: totalBookData,
+          totalBookData: [],
           curBookInfo: bookIntroFromFirestore[0],
           curBookData: bookData,
           isLoading: false,
@@ -132,17 +116,13 @@ class HomeViewModel with ChangeNotifier {
       } else {
         //firestore에 저장된 issue와 google sheet의 issue가 같을때 (google sheet에서 data 안읽어도 됨)
         //firestore에서 읽어온 data를 cur data에 넣어준다.
-
-        List<BookData> bookData = [];
-        for (final data in totalBookData) {
-          if (data.keys.first == bookIntroFromFirestore[0].issue) {
-            bookData = data.values.first;
-            break;
-          }
-        }
+        List<BookData> bookDataFromFirebase =
+            await firestoreUseCase
+                .getFirestoreBookData(bookIntroFromFirestore[0].issue);
+        List<BookData> bookData = bookDataFromFirebase;
         _state = state.copyWith(
           bookIntroList: bookIntroFromFirestore,
-          totalBookData: totalBookData,
+          totalBookData: [],
           curBookInfo: bookIntroFromFirestore[0],
           curBookData: bookData,
           isLoading: false,
@@ -153,19 +133,15 @@ class HomeViewModel with ChangeNotifier {
       //firestore timestamp update
       firestoreUseCase.saveFirestoreLastSaveDate();
     } else {
-      List<BookData> bookData = [];
-      for (final data in totalBookData) {
-        if (data.keys.first == bookIntroFromFirestore[0].issue) {
-          bookData = data.values.first;
-          break;
-        }
-      }
+      List<BookData> bookDataFromFirebase = await firestoreUseCase
+          .getFirestoreBookData(bookIntroFromFirestore[0].issue);
+      List<BookData> bookData = bookDataFromFirebase;
 
       _state = state.copyWith(
         isLoading: false,
         bookIntroList: bookIntroFromFirestore,
         isGoogleSheetLoading: false,
-        totalBookData: totalBookData,
+        totalBookData: [],
         curBookInfo:
             bookIntroFromFirestore.isEmpty ? null : bookIntroFromFirestore[0],
         curBookData: bookData,
@@ -177,14 +153,10 @@ class HomeViewModel with ChangeNotifier {
   }
 
   void pageChange(int index) async {
-    List<BookData> bookData = [];
-    for (final data in state.totalBookData) {
-      if (data.keys.first ==
-          state.bookIntroList[state.bookIntroList.length - index].issue) {
-        bookData = data.values.first;
-        break;
-      }
-    }
+    List<BookData> bookDataFromFirebase =
+        await firestoreUseCase.getFirestoreBookData(
+            state.bookIntroList[state.bookIntroList.length - index].issue);
+    List<BookData> bookData = bookDataFromFirebase;
 
     _state = state.copyWith(
       curBookInfo: state.bookIntroList[state.bookIntroList.length - index],

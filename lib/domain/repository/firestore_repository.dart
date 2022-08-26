@@ -6,9 +6,11 @@ abstract class FirestoreRepository {
 
   Future<void> saveFirestoreLastSaveDate();
 
-  Future<List<Map<String, List<BookData>>>> getFirestoreBookData();
+  Future<List<Map<String, List<BookData>>>> getFirestoreBookDataList();
 
-  Future<void> saveFirestoreBookData(
+  Future<List<BookData>> getFirestoreBookData(String issue);
+
+  Future<void> saveFirestoreBookDataList(
       String issue, List<Map<String, dynamic>> bookData);
 
   Future<List<BookIntro>> getFirestoreBookIntro();

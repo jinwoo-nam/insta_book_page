@@ -7,8 +7,13 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
   final dataSource = FirestoreDataSource();
 
   @override
-  Future<List<Map<String, List<BookData>>>> getFirestoreBookData() async {
-    return await dataSource.getFirestoreBookData();
+  Future<List<Map<String, List<BookData>>>> getFirestoreBookDataList() async {
+    return await dataSource.getFirestoreBookDataList();
+  }
+
+  @override
+  Future<List<BookData>> getFirestoreBookData(String issue) async {
+    return await dataSource.getFirestoreBookData(issue);
   }
 
   @override
@@ -22,9 +27,9 @@ class FirestoreRepositoryImpl implements FirestoreRepository {
   }
 
   @override
-  Future<void> saveFirestoreBookData(
+  Future<void> saveFirestoreBookDataList(
       String issue, List<Map<String, dynamic>> bookData) async {
-    await dataSource.saveFirestoreBookData(issue, bookData);
+    await dataSource.saveFirestoreBookDataList(issue, bookData);
   }
 
   @override
