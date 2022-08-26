@@ -118,17 +118,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 20.0),
                   child: Column(
-                    children: const [
-                      Text(
-                        '데이터를 불러오고 있습니다. 시간이 오래 걸릴수도 있습니다.\n잠시만 기다려주세요.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 19,
-                          height: 1.7,
+                    children: [
+                      if (state.isGoogleSheetLoading) ...[
+                        const Text(
+                          '데이터를 불러오고 있습니다. 시간이 오래 걸릴수도 있습니다.\n잠시만 기다려주세요.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 19,
+                            height: 1.7,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20,),
-                      CircularProgressIndicator(),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                      ],
+                      const CircularProgressIndicator(),
                     ],
                   ),
                 ),

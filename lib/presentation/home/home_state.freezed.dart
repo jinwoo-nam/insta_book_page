@@ -20,6 +20,7 @@ HomeState _$HomeStateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$HomeState {
+  bool get isGoogleSheetLoading => throw _privateConstructorUsedError;
   bool get isLoading => throw _privateConstructorUsedError;
   List<BookIntro> get bookIntroList => throw _privateConstructorUsedError;
   BookIntro? get curBookInfo => throw _privateConstructorUsedError;
@@ -39,7 +40,8 @@ abstract class $HomeStateCopyWith<$Res> {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) then) =
       _$HomeStateCopyWithImpl<$Res>;
   $Res call(
-      {bool isLoading,
+      {bool isGoogleSheetLoading,
+      bool isLoading,
       List<BookIntro> bookIntroList,
       BookIntro? curBookInfo,
       List<BookData> curBookData,
@@ -59,6 +61,7 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
 
   @override
   $Res call({
+    Object? isGoogleSheetLoading = freezed,
     Object? isLoading = freezed,
     Object? bookIntroList = freezed,
     Object? curBookInfo = freezed,
@@ -67,6 +70,10 @@ class _$HomeStateCopyWithImpl<$Res> implements $HomeStateCopyWith<$Res> {
     Object? totalBookData = freezed,
   }) {
     return _then(_value.copyWith(
+      isGoogleSheetLoading: isGoogleSheetLoading == freezed
+          ? _value.isGoogleSheetLoading
+          : isGoogleSheetLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
       isLoading: isLoading == freezed
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -113,7 +120,8 @@ abstract class _$$_HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Res> {
       __$$_HomeStateCopyWithImpl<$Res>;
   @override
   $Res call(
-      {bool isLoading,
+      {bool isGoogleSheetLoading,
+      bool isLoading,
       List<BookIntro> bookIntroList,
       BookIntro? curBookInfo,
       List<BookData> curBookData,
@@ -136,6 +144,7 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
 
   @override
   $Res call({
+    Object? isGoogleSheetLoading = freezed,
     Object? isLoading = freezed,
     Object? bookIntroList = freezed,
     Object? curBookInfo = freezed,
@@ -144,6 +153,10 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
     Object? totalBookData = freezed,
   }) {
     return _then(_$_HomeState(
+      isGoogleSheetLoading: isGoogleSheetLoading == freezed
+          ? _value.isGoogleSheetLoading
+          : isGoogleSheetLoading // ignore: cast_nullable_to_non_nullable
+              as bool,
       isLoading: isLoading == freezed
           ? _value.isLoading
           : isLoading // ignore: cast_nullable_to_non_nullable
@@ -176,7 +189,8 @@ class __$$_HomeStateCopyWithImpl<$Res> extends _$HomeStateCopyWithImpl<$Res>
 @JsonSerializable()
 class _$_HomeState implements _HomeState {
   _$_HomeState(
-      {this.isLoading = true,
+      {this.isGoogleSheetLoading = false,
+      this.isLoading = true,
       final List<BookIntro> bookIntroList = const [],
       this.curBookInfo,
       final List<BookData> curBookData = const [],
@@ -189,6 +203,9 @@ class _$_HomeState implements _HomeState {
   factory _$_HomeState.fromJson(Map<String, dynamic> json) =>
       _$$_HomeStateFromJson(json);
 
+  @override
+  @JsonKey()
+  final bool isGoogleSheetLoading;
   @override
   @JsonKey()
   final bool isLoading;
@@ -223,7 +240,7 @@ class _$_HomeState implements _HomeState {
 
   @override
   String toString() {
-    return 'HomeState(isLoading: $isLoading, bookIntroList: $bookIntroList, curBookInfo: $curBookInfo, curBookData: $curBookData, imageUrl: $imageUrl, totalBookData: $totalBookData)';
+    return 'HomeState(isGoogleSheetLoading: $isGoogleSheetLoading, isLoading: $isLoading, bookIntroList: $bookIntroList, curBookInfo: $curBookInfo, curBookData: $curBookData, imageUrl: $imageUrl, totalBookData: $totalBookData)';
   }
 
   @override
@@ -231,6 +248,8 @@ class _$_HomeState implements _HomeState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_HomeState &&
+            const DeepCollectionEquality()
+                .equals(other.isGoogleSheetLoading, isGoogleSheetLoading) &&
             const DeepCollectionEquality().equals(other.isLoading, isLoading) &&
             const DeepCollectionEquality()
                 .equals(other._bookIntroList, _bookIntroList) &&
@@ -247,6 +266,7 @@ class _$_HomeState implements _HomeState {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      const DeepCollectionEquality().hash(isGoogleSheetLoading),
       const DeepCollectionEquality().hash(isLoading),
       const DeepCollectionEquality().hash(_bookIntroList),
       const DeepCollectionEquality().hash(curBookInfo),
@@ -269,7 +289,8 @@ class _$_HomeState implements _HomeState {
 
 abstract class _HomeState implements HomeState {
   factory _HomeState(
-      {final bool isLoading,
+      {final bool isGoogleSheetLoading,
+      final bool isLoading,
       final List<BookIntro> bookIntroList,
       final BookIntro? curBookInfo,
       final List<BookData> curBookData,
@@ -279,6 +300,8 @@ abstract class _HomeState implements HomeState {
   factory _HomeState.fromJson(Map<String, dynamic> json) =
       _$_HomeState.fromJson;
 
+  @override
+  bool get isGoogleSheetLoading;
   @override
   bool get isLoading;
   @override

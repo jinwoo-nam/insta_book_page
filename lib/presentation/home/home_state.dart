@@ -8,6 +8,7 @@ part 'home_state.g.dart';
 @freezed
 class HomeState with _$HomeState {
   factory HomeState({
+    @Default(false) bool isGoogleSheetLoading,
     @Default(true) bool isLoading,
     @Default([]) List<BookIntro> bookIntroList,
     BookIntro? curBookInfo,

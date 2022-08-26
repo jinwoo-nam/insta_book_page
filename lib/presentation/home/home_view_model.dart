@@ -46,6 +46,11 @@ class HomeViewModel with ChangeNotifier {
 
     if (lastSavedDate == null ||
         DateTime.now().difference(lastSavedDate).inDays > 0) {
+      _state = state.copyWith(
+        isGoogleSheetLoading: true,
+      );
+      notifyListeners();
+
       print('2. google sheet data 읽기');
       List<String> googleSheetIssues = [];
       //google sheet에서 book intro 읽기
@@ -160,6 +165,7 @@ class HomeViewModel with ChangeNotifier {
       _state = state.copyWith(
         isLoading: false,
         bookIntroList: bookIntroFromFirestore,
+        isGoogleSheetLoading: false,
         totalBookData: totalBookData,
         curBookInfo:
             bookIntroFromFirestore.isEmpty ? null : bookIntroFromFirestore[0],

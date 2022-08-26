@@ -7,6 +7,7 @@ part of 'home_state.dart';
 // **************************************************************************
 
 _$_HomeState _$$_HomeStateFromJson(Map<String, dynamic> json) => _$_HomeState(
+      isGoogleSheetLoading: json['isGoogleSheetLoading'] as bool? ?? false,
       isLoading: json['isLoading'] as bool? ?? true,
       bookIntroList: (json['bookIntroList'] as List<dynamic>?)
               ?.map((e) => BookIntro.fromJson(e as Map<String, dynamic>))
@@ -35,6 +36,7 @@ _$_HomeState _$$_HomeStateFromJson(Map<String, dynamic> json) => _$_HomeState(
 
 Map<String, dynamic> _$$_HomeStateToJson(_$_HomeState instance) =>
     <String, dynamic>{
+      'isGoogleSheetLoading': instance.isGoogleSheetLoading,
       'isLoading': instance.isLoading,
       'bookIntroList': instance.bookIntroList,
       'curBookInfo': instance.curBookInfo,
