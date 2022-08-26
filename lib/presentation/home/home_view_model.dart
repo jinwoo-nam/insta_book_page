@@ -44,8 +44,7 @@ class HomeViewModel with ChangeNotifier {
       }
     }
 
-    if (lastSavedDate == null ||
-        DateTime.now().difference(lastSavedDate).inDays > 0) {
+    if (lastSavedDate == null || DateTime.now().day != lastSavedDate.day) {
       _state = state.copyWith(
         isGoogleSheetLoading: true,
       );
